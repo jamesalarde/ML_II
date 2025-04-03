@@ -13,7 +13,7 @@ os.environ['GOOGLE_API_KEY'] = 'AIzaSyA5I9zdE44pHsp33RlkiKbrKQJapqosmX0'
 # create prompt template 1
 product_description = PromptTemplate(
     input_variables=['product_name', 'product_information'],
-    template='Generate a three-line product description for the product called {product_name}. Here is the information regarding this product: {product_information}'
+    template='Generate a three-sentence product description for the product called {product_name}. Here is the information regarding this product: {product_information}.'
 )
 
 description_llm = ChatGoogleGenerativeAI(model='gemini-1.5-flash', temperature=0)
@@ -22,7 +22,7 @@ description_chain = LLMChain(llm=description_llm, prompt=product_description, ou
 # create prompt template 2
 tone = PromptTemplate(
     input_variables=['description_text', 'tone'],
-    template='Edit this product description to be more {tone}: {description_text}. Generate a three-sentence product description. Do NOT make a JSON file, I want it to be in markdown.'
+    template='Edit this product description to be more {tone}: {description_text}. Generate a three-sentence product description with an average sentence length of 17 words. Highlight functionality and make sure to include the product name. '
 )
 
 tone_chain = LLMChain(llm=description_llm, prompt=product_description, output_key='final_description')

@@ -14,18 +14,25 @@ def project_description():
     By using AI, high-quality product descriptions can be generated that are tailored to the specific needs of each startup, and friendly towards search engines.
 
     #### :hammer_and_wrench: Methodology
-    The group obtained the dataset of Amazon UK products to check usual product descriptions uploaded in their online store. The dataset can be accessed here : https://www.kaggle.com/datasets/asaniczka/amazon-uk-products-dataset-2023
+    The group obtained the dataset of Amazon UK products to do a style analysis and to check usual product descriptions uploaded in their online store. The dataset can be accessed here : https://www.kaggle.com/datasets/asaniczka/amazon-uk-products-dataset-2023
 
     The following steps were taken to create the model :
-    1. Prompt Engineering & Validation
-    2. User Interface Deployment
+    1. Style Analysis
+    2. Prompt Engineering & Validation
+    3. User Interface Deployment
     
-    Below is the general flow of the model :
+    Below is the general flow of the model.
     """)
 
     st.image('./ML2.png')
 
     st.write("""
+    #### :bar_chart: Style Analysis
+    The group analyzed the dataset to understand the style of product descriptions used in Amazon UK. The analysis included:
+    - **Sentence Length** : the average sentence length was calculated to understand the complexity of the descriptions
+    - **Tone Analysis** : the tone of the descriptions leaned towards friendly and professional, with some playful elements
+    - **Functionality Highlighting** : the descriptions highlighted the functionality of the products, as this is a key aspect of effective product descriptions
+             
     #### :traffic_light: Prompt Engineering & Validation
     The group used a sequential chain to generate the product descriptions.
     - The first prompt generates a three-line product description based on the product name and information.
@@ -52,28 +59,28 @@ def generator_interface():
     
     """)
 
-    uploaded_file = st.file_uploader('Upload your CSV file here', type=['csv'])
+    uploaded_file = st.file_uploader('Upload your CSV file here : ', type=['csv'])
 
     if uploaded_file is not None:
-        
-        # Tone selection
-        tone = st.selectbox('Select Tone:', ['Friendly','Professional', 'Luxe', 'Playful', 'Minimalist'])
 
-        # Generate descriptions
+        tone = st.sidebar.radio('Select your preferred tone:', ['Friendly','Professional', 'Luxe', 'Playful', 'Minimalist'])
+
         if st.button('Generate Descriptions'):
+
             if uploaded_file is not None:
                 result_df = generate_product_descriptions_from_csv(uploaded_file, tone)
-                cleaned_df = result_df.drop(columns=['index', 'uniq_id'])
+                cleaned_df = result_df.drop(columns=['index', 'uniq_id', 'product_information'])
                 st.dataframe(cleaned_df)
 
-        # Download button
-            csv = result_df.to_csv(index=False)
-            st.download_button(
-                label='Download as CSV',
-                data=csv,
-                file_name='product_descriptions.csv',
-                mime='text/csv',
-        )
+                csv = result_df.to_csv(index=False)
+                st.download_button(
+                    label='Download as CSV',
+                    data=csv,
+                    file_name='product_descriptions.csv',
+                    mime='text/csv',
+                )
+
+                st.success('Descriptions generated successfully! Click the button above to download the CSV file.')
 
 def meet_the_team():
     st.title("Meet the Team")
